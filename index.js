@@ -90,4 +90,21 @@ app.post("/lists/:id/add", async (req, res) => {
     res.json({ success: true });
 });
 
+// 全業種取得
+app.get("/industries", async (req, res) => {
+    const [rows] = await db.query("SELECT * FROM industries ORDER BY id ASC");
+    res.json(rows);
+});
+
+// 新規業種追加
+app.post("/industries", async (req, res) => {
+    const { name } = req.body;
+    const [result] = await db.query(
+        "INSERT INTO industries (name) VALUES (?)",
+        [name]
+    );
+    res.json({ id: result.insertId, name });
+});
+
+
 app.listen(3001, () => console.log("API running on port 3001"));
