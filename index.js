@@ -106,5 +106,21 @@ app.post("/industries", async (req, res) => {
     res.json({ id: result.insertId, name });
 });
 
+// リスト内の顧客取得
+app.get("/lists/:id/customers", async (req, res) => {
+    const listId = req.params.id;
+
+    const [rows] = await db.query(
+        `SELECT c.* 
+         FROM customer_list_items cli
+         JOIN customers c ON cli.customer_id = c.id
+         WHERE cli.list_id = ?
+         ORDER BY c.id DESC`,
+        [listId]
+    );
+
+    res.json(rows);
+});
+
 
 app.listen(3001, () => console.log("API running on port 3001"));
